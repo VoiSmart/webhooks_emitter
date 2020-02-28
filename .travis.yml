@@ -5,9 +5,9 @@ language: elixir
 matrix:
   include:
     - elixir: 1.10.1
-      otp_release: 22
+      otp_release: 22.2
     - elixir: 1.10.1
-      otp_release: 21
+      otp_release: 21.3
 
 cache:
   directories:
