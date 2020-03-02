@@ -59,6 +59,14 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
       |> Base.hex_encode32(case: :lower, padding: false)
 
     [{"x-#{hdi}-Signature", "sha256:#{signature}"} | headers]
+  rescue
+    UndefinedFunctionError ->
+      signature =
+        :sha256
+        |> :crypto.hmac(secret, payload)
+        |> Base.hex_encode32(case: :lower, padding: false)
+
+      [{"x-#{hdi}-Signature", "sha256:#{signature}"} | headers]
   end
 
   defp handle_response({:ok, %HTTPoison.Response{} = res}) do

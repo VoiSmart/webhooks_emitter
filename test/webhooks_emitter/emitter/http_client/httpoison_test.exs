@@ -99,5 +99,13 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoisonTest do
       |> Base.hex_encode32(case: :lower, padding: false)
 
     assert hash == my_hash
+  rescue
+    UndefinedFunctionError ->
+      my_hash =
+        :sha256
+        |> :crypto.hmac(secret, body)
+        |> Base.hex_encode32(case: :lower, padding: false)
+
+      assert hash == my_hash
   end
 end
