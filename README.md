@@ -5,6 +5,10 @@
 
 > Emits your events as outgoing http webhooks.
 
+WebhooksEmitter takes care of emitting your events with an HTTP POST to remote listeners. Tries to be non-blocking as much as possible,
+by queuing events even during the HTTP operation or backoff intervals. Handles retries and timeouts for you. Is capable to digital sign the payload,
+with a configurable secret, in order to check the message integrity on the receiver side.
+
 ## Installation
 
 The package can be installed by adding `webhooks_emitter` to your list of dependencies in `mix.exs`:
