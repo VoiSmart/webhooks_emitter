@@ -16,7 +16,8 @@ defmodule WebhooksEmitter.MixProject do
         "coveralls.detail": :test,
         "coveralls.post": :test,
         "coveralls.html": :test
-      ]
+      ],
+      docs: docs()
     ]
   end
 
@@ -24,6 +25,13 @@ defmodule WebhooksEmitter.MixProject do
     [
       extra_applications: [:logger],
       mod: {WebhooksEmitter.Application, []}
+    ]
+  end
+
+  defp docs do
+    [
+      extras: ["README.md"],
+      nest_modules_by_prefix: [WebhooksEmitter, Emitter.JsonSafeEncoder]
     ]
   end
 

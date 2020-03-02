@@ -1,6 +1,6 @@
 defmodule WebhooksEmitter.Config do
   @moduledoc """
-  Webhook emitter specification.
+  Webhook emitter configuration.
   """
 
   @type header_name :: String.t()
