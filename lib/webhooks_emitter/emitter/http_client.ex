@@ -15,4 +15,11 @@ defmodule WebhooksEmitter.Emitter.HttpClient do
               config,
               request_id
             ) :: response
+
+  @app_version Mix.Project.config() |> Keyword.fetch!(:version)
+
+  @doc false
+  def default_ua do
+    <<"WebHooks-Emitter/", @app_version::binary>>
+  end
 end

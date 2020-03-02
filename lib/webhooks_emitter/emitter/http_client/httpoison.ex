@@ -1,7 +1,7 @@
 defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
   @moduledoc false
   alias WebhooksEmitter.Config
-  alias WebhooksEmitter.Emitter.JsonSafeEncoder
+  alias WebhooksEmitter.Emitter.{HttpClient, JsonSafeEncoder}
 
   @behaviour WebhooksEmitter.Emitter.HttpClient
 
@@ -42,7 +42,8 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
     [
       {"content-type", "application/json"},
       {"x-#{hdi}-Event", event_name},
-      {"x-#{hdi}-Delivery", request_id}
+      {"x-#{hdi}-Delivery", request_id},
+      {"user-agent", HttpClient.default_ua()}
     ]
     |> maybe_add_signature(payload, config)
   end
