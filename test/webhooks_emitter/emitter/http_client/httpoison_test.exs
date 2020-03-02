@@ -88,6 +88,42 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoisonTest do
       assert {:error, _} =
                HTTPClient.do_post(:an_event, %{foo: "bar"}, config, "request_id", HTTPoisonMock)
     end
+
+    test "passes the insecure ssl option" do
+      HTTPoisonMock
+      |> expect(:post, fn url, _body, _headers, opts ->
+        assert [:insecure] = Keyword.get(opts, :hackney)
+
+        {:ok,
+         %HTTPoison.Response{
+           status_code: 200,
+           request: %HTTPoison.Request{url: url}
+         }}
+      end)
+
+      config = %Config{url: "https://foo.bar", request_timeout: 1, insecure: true}
+
+      assert {:ok, _} =
+               HTTPClient.do_post(:an_event, %{foo: "bar"}, config, "request_id", HTTPoisonMock)
+    end
+
+    test "passes the timeout ssl option" do
+      HTTPoisonMock
+      |> expect(:post, fn url, _body, _headers, opts ->
+        assert 1 = Keyword.get(opts, :timeout)
+
+        {:ok,
+         %HTTPoison.Response{
+           status_code: 200,
+           request: %HTTPoison.Request{url: url}
+         }}
+      end)
+
+      config = %Config{url: "https://foo.bar", request_timeout: 1}
+
+      assert {:ok, _} =
+               HTTPClient.do_post(:an_event, %{foo: "bar"}, config, "request_id", HTTPoisonMock)
+    end
   end
 
   defp assert_signature(signature, body, secret) do

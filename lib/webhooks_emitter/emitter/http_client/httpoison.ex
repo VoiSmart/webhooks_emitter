@@ -8,7 +8,7 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
   def do_post(
         event_name,
         payload,
-        %Config{url: url, request_timeout: timeout} = config,
+        %Config{url: url} = config,
         request_id,
         http_lib \\ HTTPoison
       ) do
@@ -16,7 +16,7 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
       {:ok, body} ->
         headers = default_headers(event_name, body, config, request_id)
 
-        opts = [timeout: timeout]
+        opts = options(config)
 
         url
         |> http_lib.post(body, headers, opts)
@@ -45,6 +45,24 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
       {"x-#{hdi}-Delivery", request_id}
     ]
     |> maybe_add_signature(payload, config)
+  end
+
+  defp options(%Config{} = config) do
+    Keyword.new()
+    |> add_timeout(config)
+    |> add_insecure(config)
+  end
+
+  defp add_timeout(opts, %Config{request_timeout: timeout}) do
+    opts
+    |> Keyword.put(:timeout, timeout)
+  end
+
+  defp add_insecure(opts, %Config{insecure: false}), do: opts
+
+  defp add_insecure(opts, %Config{insecure: true}) do
+    opts
+    |> Keyword.put(:hackney, [:insecure])
   end
 
   defp maybe_add_signature(headers, _, %Config{secret: nil}), do: headers

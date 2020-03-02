@@ -17,7 +17,8 @@ defmodule WebhooksEmitter.Config do
           additional_headers: headers,
           http_client: module(),
           backoff_start: non_neg_integer(),
-          backoff_limit: non_neg_integer()
+          backoff_limit: non_neg_integer(),
+          insecure: boolean
         }
 
   @enforce_keys :url
@@ -29,7 +30,8 @@ defmodule WebhooksEmitter.Config do
             additional_headers: [],
             http_client: WebhooksEmitter.Emitter.HttpClient.HTTPoison,
             backoff_start: 1 * 1000,
-            backoff_limit: 60 * 1000
+            backoff_limit: 60 * 1000,
+            insecure: false
 
   # @doc """
   # Callback to be implemented in order to retrieve a webhook configuration
@@ -134,5 +136,31 @@ defmodule WebhooksEmitter.Config do
     %{additional_headers: headers} = config
     new_headers = [additional_header | headers]
     %{config | additional_headers: new_headers}
+  end
+
+  @doc """
+  Allow SSL insecure requests.
+
+  ## Examples
+        iex> WebhooksEmitter.Config.new("https://host.tld/hooks")
+        ...> |> WebhooksEmitter.Config.allow_insecure()
+        %WebhooksEmitter.Config{url: "https://host.tld/hooks", insecure: true}
+
+  """
+  def allow_insecure(%__MODULE__{} = config) do
+    %{config | insecure: true}
+  end
+
+  @doc """
+  Disallow SSL insecure requests (the default).
+
+  ## Examples
+        iex> WebhooksEmitter.Config.new("https://host.tld/hooks")
+        ...> |> WebhooksEmitter.Config.disallow_insecure()
+        %WebhooksEmitter.Config{url: "https://host.tld/hooks", insecure: false}
+
+  """
+  def disallow_insecure(%__MODULE__{} = config) do
+    %{config | insecure: false}
   end
 end
