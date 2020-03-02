@@ -101,6 +101,8 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoisonTest do
     assert hash == my_hash
   rescue
     UndefinedFunctionError ->
+      assert <<"sha256:", hash::binary>> = signature
+
       my_hash =
         :sha256
         |> :crypto.hmac(secret, body)
