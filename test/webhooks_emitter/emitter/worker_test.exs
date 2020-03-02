@@ -7,11 +7,11 @@ defmodule WebhooksEmitter.Emitter.WorkerTest do
 
   alias __MODULE__.HTTPMock
   alias WebhooksEmitter.Config
-  alias WebhooksEmitter.Emitter.HttpClientInterface
+  alias WebhooksEmitter.Emitter.HttpClient
   alias WebhooksEmitter.Emitter.Worker
 
   setup_all do
-    Mox.defmock(__MODULE__.HTTPMock, for: HttpClientInterface)
+    Mox.defmock(__MODULE__.HTTPMock, for: HttpClient)
 
     :ok
   end

@@ -27,7 +27,7 @@ defmodule WebhooksEmitter.Config do
             max_retries: 3,
             request_timeout: 5000,
             additional_headers: [],
-            http_client: WebhooksEmitter.Emitter.HttpClient,
+            http_client: WebhooksEmitter.Emitter.HttpClient.HTTPoison,
             backoff_start: 1 * 1000,
             backoff_limit: 60 * 1000
 
