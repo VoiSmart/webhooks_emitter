@@ -75,6 +75,8 @@ Content-Length: 6615
 }
 ```
 
+For more information, see [the documentation][documentation].
+
 ## License
 
 Copyright 2020 Matteo Brancaleoni and VoiSmart S.R.L.
