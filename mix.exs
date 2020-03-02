@@ -5,6 +5,9 @@ defmodule WebhooksEmitter.MixProject do
   def project do
     [
       app: :webhooks_emitter,
+      description: "Emits your events as outgoing http webhooks.",
+      source_url: "https://github.com/VoiSmart/webhooks_emitter",
+      homepage_url: "https://github.com/VoiSmart/webhooks_emitter",
       version: "0.1.0",
       elixir: "~> 1.10",
       # elixirc_options: [warnings_as_errors: true],
@@ -17,7 +20,8 @@ defmodule WebhooksEmitter.MixProject do
         "coveralls.post": :test,
         "coveralls.html": :test
       ],
-      docs: docs()
+      docs: docs(),
+      package: package()
     ]
   end
 
@@ -25,6 +29,14 @@ defmodule WebhooksEmitter.MixProject do
     [
       extra_applications: [:logger],
       mod: {WebhooksEmitter.Application, []}
+    ]
+  end
+
+  defp package do
+    [
+      mantainers: ["Matteo Brancaleoni"],
+      licenses: ["Apache-2.0"],
+      links: %{"GitHub" => "https://github.com/VoiSmart/webhooks_emitter"}
     ]
   end
 
