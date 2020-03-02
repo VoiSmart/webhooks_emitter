@@ -107,6 +107,8 @@ defmodule WebhooksEmitter.Emitter.Worker do
   end
 
   @impl true
+  # these :DOWN messages are from the spawned Task.
+  # Maybe we can use them to cleanup and move the state instead of doing elsewhere?
   def handle_event(:info, {:DOWN, _, :process, _pid, :normal}, state, _data)
       when state in [:idle, :backoff, :running] do
     :keep_state_and_data
