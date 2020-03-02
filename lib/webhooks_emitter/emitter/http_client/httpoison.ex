@@ -9,7 +9,8 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
         event_name,
         payload,
         %Config{url: url, request_timeout: timeout} = config,
-        request_id
+        request_id,
+        http_lib \\ HTTPoison
       ) do
     case encode_body(payload) do
       {:ok, body} ->
@@ -18,7 +19,7 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
         opts = [timeout: timeout]
 
         url
-        |> HTTPoison.post(body, headers, opts)
+        |> http_lib.post(body, headers, opts)
 
       err ->
         err
@@ -57,7 +58,7 @@ defmodule WebhooksEmitter.Emitter.HttpClient.HTTPoison do
       |> :crypto.mac(:sha256, secret, payload)
       |> Base.hex_encode32(case: :lower, padding: false)
 
-    [{"x-#{hdi}-Signature", signature} | headers]
+    [{"x-#{hdi}-Signature", "sha256:#{signature}"} | headers]
   end
 
   defp handle_response({:ok, %HTTPoison.Response{} = res}) do
