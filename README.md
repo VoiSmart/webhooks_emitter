@@ -16,7 +16,7 @@ The package can be installed by adding `webhooks_emitter` to your list of depend
 ```elixir
 def deps do
   [
-    {:webhooks_emitter, "~> 0.1.0"}
+    {:webhooks_emitter, "~> 0.1"}
   ]
 end
 ```
@@ -65,7 +65,7 @@ Host: localhost:1234
 X-Webhooks-Event: averyimportantevent
 X-Webhooks-Delivery: fbc7fbe7-2e9b-4911-a50f-e0452672192c
 X-Webhooks-Signature: sha256:2vu2rb2moi6dihmlm6tvd3nbdnahjncmus9p8pl76h3v4ub054h0
-User-Agent: WebHooks-Emitter/0.1.0
+User-Agent: WebHooks-Emitter/0.1.1
 Content-Type: application/json
 Content-Length: 6615
 
