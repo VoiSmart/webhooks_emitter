@@ -93,10 +93,16 @@ defmodule WebhooksEmitter.Emitter.Worker do
         :info,
         {ref, response},
         :running,
-        %{backoff: backoff, worker_task: %{ref: ref}} = data
+        %{backoff: backoff, worker_task: %{ref: ref}, events_q: q} = data
       ) do
     # response from task, probably with error, reschedule it
-    Logger.warn("Got response error: #{inspect(response)}, resubmitting")
+    {:ok, _, %{request_id: rq_id}} = Queue.pop_last(q)
+
+    Logger.warn(
+      "Webhook request #{rq_id} " <>
+        "got response error: #{inspect(response)}, resubmitting.",
+      request_id: rq_id
+    )
 
     timeout = :backoff.get(backoff)
 
@@ -134,7 +140,16 @@ defmodule WebhooksEmitter.Emitter.Worker do
     end
   end
 
-  defp perform(%Request{config: %{max_retries: retries}, retry_nr: retries}) do
+  defp perform(%Request{
+         config: %{max_retries: retries},
+         retry_nr: retries,
+         request_id: request_id
+       }) do
+    Logger.error(
+      "Webhook request #{request_id} reached max retry, dropping message.",
+      request_id: request_id
+    )
+
     {:error, :max_retries}
   end
 

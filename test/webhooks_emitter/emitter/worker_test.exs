@@ -100,7 +100,6 @@ defmodule WebhooksEmitter.Emitter.WorkerTest do
       refute_receive {:ok, ^ref}
     end
 
-    @tag capture_log: true
     test "after max retries, event is discarded" do
       {:ok, pid} = start_worker()
 
@@ -113,14 +112,16 @@ defmodule WebhooksEmitter.Emitter.WorkerTest do
         http_error_response()
       end)
 
-      :ok = Worker.emit(pid, :first_event, %{}, "baz")
+      assert capture_log(fn ->
+               :ok = Worker.emit(pid, :first_event, %{}, "baz")
 
-      assert_receive {:ok, :first_event, _}, 1000
-      assert_receive {:ok, :first_event, _}, 1000
-      assert_receive {:ok, :first_event, _}, 1000
+               assert_receive {:ok, :first_event, _}, 1000
+               assert_receive {:ok, :first_event, _}, 1000
+               assert_receive {:ok, :first_event, _}, 1000
 
-      :ok = Worker.emit(pid, :second_event, %{}, "baz")
-      assert_receive {:ok, :second_event, _}, 1000
+               :ok = Worker.emit(pid, :second_event, %{}, "baz")
+               assert_receive {:ok, :second_event, _}, 1000
+             end) =~ "request baz reached max retry"
     end
 
     @tag capture_log: true
