@@ -8,7 +8,7 @@ defmodule WebhooksEmitter.MixProject do
       description: "Emits your events as outgoing http webhooks.",
       source_url: "https://github.com/VoiSmart/webhooks_emitter",
       homepage_url: "https://github.com/VoiSmart/webhooks_emitter",
-      version: "0.1.1",
+      version: "0.1.2",
       elixir: "~> 1.10",
       # elixirc_options: [warnings_as_errors: true],
       start_permanent: Mix.env() == :prod,
