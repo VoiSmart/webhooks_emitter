@@ -2,13 +2,16 @@ defmodule WebhooksEmitter.MixProject do
   @moduledoc false
   use Mix.Project
 
+  @source_url "https://github.com/VoiSmart/webhooks_emitter"
+  @version "0.1.3"
+
   def project do
     [
       app: :webhooks_emitter,
       description: "Emits your events as outgoing http webhooks.",
-      source_url: "https://github.com/VoiSmart/webhooks_emitter",
-      homepage_url: "https://github.com/VoiSmart/webhooks_emitter",
-      version: "0.1.3",
+      source_url: @source_url,
+      homepage_url: @source_url,
+      version: @version,
       elixir: "~> 1.10",
       elixirc_options: [warnings_as_errors: true],
       start_permanent: Mix.env() == :prod,
@@ -42,6 +45,9 @@ defmodule WebhooksEmitter.MixProject do
 
   defp docs do
     [
+      main: "readme",
+      source_ref: "v#{@version}",
+      source_url: @source_url,
       extras: ["README.md"],
       nest_modules_by_prefix: [WebhooksEmitter, Emitter.JsonSafeEncoder]
     ]
