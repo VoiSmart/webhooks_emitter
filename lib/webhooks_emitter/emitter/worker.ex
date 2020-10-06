@@ -84,7 +84,8 @@ defmodule WebhooksEmitter.Emitter.Worker do
     # remove request from queue and check if there's some more work to do
     {:ok, new_q, _} = Queue.pop_last(q)
 
-    %{data | worker_task: nil, events_q: new_q, backoff: :backoff.succeed(data.backoff)}
+    {_, backoff} = :backoff.succeed(data.backoff)
+    %{data | worker_task: nil, events_q: new_q, backoff: backoff}
     |> handle_idle()
   end
 
