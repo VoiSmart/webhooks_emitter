@@ -178,7 +178,6 @@ defmodule WebhooksEmitter.Emitter.WorkerTest do
 
       :ok = Worker.emit(pid, :event_name, %{}, "baz")
       assert_receive {:ok, ^ref, task}, 5000
-
     end
 
     @tag capture_log: true

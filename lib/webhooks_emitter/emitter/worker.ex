@@ -85,6 +85,7 @@ defmodule WebhooksEmitter.Emitter.Worker do
     {:ok, new_q, _} = Queue.pop_last(q)
 
     {_, backoff} = :backoff.succeed(data.backoff)
+
     %{data | worker_task: nil, events_q: new_q, backoff: backoff}
     |> handle_idle()
   end
