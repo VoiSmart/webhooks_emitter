@@ -153,6 +153,35 @@ defmodule WebhooksEmitter.Emitter.WorkerTest do
     end
 
     @tag capture_log: true
+    test "emit successfully multiple events" do
+      {:ok, pid} = start_worker()
+
+      ref = make_ref()
+      myself = self()
+
+      HTTPMock
+      |> expect(:do_post, 3, fn :event_name, _payload, _config, "baz" ->
+        send(myself, {:ok, ref, self()})
+
+        receive do
+          :success -> success_response()
+        end
+      end)
+
+      :ok = Worker.emit(pid, :event_name, %{}, "baz")
+      assert_receive {:ok, ^ref, task}, 1000
+      send(task, :success)
+
+      :ok = Worker.emit(pid, :event_name, %{}, "baz")
+      assert_receive {:ok, ^ref, task}, 5000
+      send(task, :success)
+
+      :ok = Worker.emit(pid, :event_name, %{}, "baz")
+      assert_receive {:ok, ^ref, task}, 5000
+
+    end
+
+    @tag capture_log: true
     test "delivery is retried on underlying lib error" do
       {:ok, pid} = start_worker()
 
