@@ -49,18 +49,18 @@ defmodule WebhooksEmitter.MixProject do
 
   defp deps do
     [
-      {:httpoison, "~> 1.6"},
+      {:httpoison, "~> 1.7"},
       {:jason, "~> 1.1"},
       {:elixir_uuid, "~> 1.2"},
-      {:gen_state_machine, "~> 2.1"},
+      {:gen_state_machine, "~> 3.0"},
       {:backoff, "~> 1.1"},
       # devel stuff
-      {:hammox, "~> 0.2", only: :test},
-      {:credo, "~> 1.0", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 0.5", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.21", only: :dev, runtime: false},
-      {:excoveralls, "~> 0.10", only: :test},
-      {:stream_data, "~> 0.4", only: :test}
+      {:hammox, "~> 0.3", only: :test},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
+      {:excoveralls, "~> 0.13", only: :test},
+      {:stream_data, "~> 0.5", only: :test}
     ]
   end
 end
