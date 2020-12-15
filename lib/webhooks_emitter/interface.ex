@@ -16,4 +16,5 @@ defmodule WebhooksEmitter.Interface do
               :ok | {:error, :already_exists}
   @callback detach(emitter_id) :: :ok
   @callback emit(event_name, event_payload, request_id) :: {:ok, request_id}
+  @callback list_emitters() :: list(emitter_id)
 end

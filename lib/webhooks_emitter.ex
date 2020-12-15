@@ -47,6 +47,16 @@ defmodule WebhooksEmitter do
   end
 
   @doc """
+  Returns all emitters ID attached to events.
+  """
+  @impl true
+  @spec list_emitters() ::
+          list(Interface.emitter_id())
+  def list_emitters do
+    Emitter.get_emitters()
+  end
+
+  @doc """
   Detaches an emitter.
 
   Stops the process and removes it from the supervision tree, disregarding any queued message. Always returns :ok.

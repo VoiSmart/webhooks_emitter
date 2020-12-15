@@ -45,6 +45,13 @@ defmodule WebhooksEmitterTest do
     end
   end
 
+  describe "list_emitters/0" do
+    test "retrieve emitter ID attached to events" do
+      WebhooksEmitter.attach(:myid4, "an_event", %Config{url: "http://foo.bar"})
+      assert :myid4 in WebhooksEmitter.list_emitters()
+    end
+  end
+
   defp subscribe_registry(event_name) do
     Registry.register(Emitter.registry_name(), event_name, [])
   end
