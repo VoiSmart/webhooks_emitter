@@ -16,7 +16,7 @@ The package can be installed by adding `webhooks_emitter` to your list of depend
 ```elixir
 def deps do
   [
-    {:webhooks_emitter, "~> 0.1"}
+    {:webhooks_emitter, "~> 0.2"}
   ]
 end
 ```
