@@ -52,6 +52,17 @@ defmodule WebhooksEmitterTest do
     end
   end
 
+  describe "started?/1" do
+    test "with an already started emitter ID" do
+      WebhooksEmitter.attach(:myid5, "an_event", %Config{url: "http://foo.bar"})
+      assert WebhooksEmitter.started?(:myid5)
+    end
+
+    test "with a not started emitter ID" do
+      refute WebhooksEmitter.started?(:not_existent_id)
+    end
+  end
+
   defp subscribe_registry(event_name) do
     Registry.register(Emitter.registry_name(), event_name, [])
   end

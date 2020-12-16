@@ -57,6 +57,15 @@ defmodule WebhooksEmitter do
   end
 
   @doc """
+  Checks if a given emitter ID is already started
+  """
+  @impl true
+  @spec started?(Interface.emitter_id()) :: boolean()
+  def started?(emitter_id) do
+    emitter_id in Emitter.get_emitters()
+  end
+
+  @doc """
   Detaches an emitter.
 
   Stops the process and removes it from the supervision tree, disregarding any queued message. Always returns :ok.

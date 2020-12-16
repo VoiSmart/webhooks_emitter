@@ -17,4 +17,5 @@ defmodule WebhooksEmitter.Interface do
   @callback detach(emitter_id) :: :ok
   @callback emit(event_name, event_payload, request_id) :: {:ok, request_id}
   @callback list_emitters() :: list(emitter_id)
+  @callback started?(emitter_id) :: boolean()
 end
