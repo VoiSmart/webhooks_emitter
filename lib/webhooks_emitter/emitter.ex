@@ -17,13 +17,26 @@ defmodule WebhooksEmitter.Emitter do
     Supervisor.start_child(EmitterSup, spec)
   end
 
-  def stop_emitter(emitter_id) do
+  def terminate_emitter(emitter_id) do
     Supervisor.terminate_child(EmitterSup, emitter_spec_id(emitter_id))
     Supervisor.delete_child(EmitterSup, emitter_spec_id(emitter_id))
   end
 
+  def stop_emitter(emitter_id) do
+    Supervisor.terminate_child(EmitterSup, emitter_spec_id(emitter_id))
+  end
+
+  def restart_emitter(emitter_id) do
+    Supervisor.restart_child(EmitterSup, emitter_spec_id(emitter_id))
+  end
+
   def get_emitters do
-    Supervisor.which_children(EmitterSup)
+    EmitterSup
+    |> Supervisor.which_children()
+    |> Enum.filter(fn
+      {_id, child, _, _} when is_pid(child) -> true
+      _ -> false
+    end)
     |> Enum.map(fn {{_, emitter_id}, _, _, _} -> emitter_id end)
   end
 

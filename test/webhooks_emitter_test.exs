@@ -24,6 +24,15 @@ defmodule WebhooksEmitterTest do
       assert {:error, :already_exists} = res
     end
 
+    test "can restart a stopped emitter" do
+      WebhooksEmitter.attach(:myid, "an_event", %Config{url: "http://foo.bar"})
+      :ok = WebhooksEmitter.pause(:myid)
+
+      res = WebhooksEmitter.restart(:myid)
+
+      assert :ok = res
+    end
+
     test "different emitters can handle same events" do
       res1 = WebhooksEmitter.attach(:myid1, "an_event", %Config{url: "http://foo.bar"})
       res2 = WebhooksEmitter.attach(:myid2, "an_event", %Config{url: "http://foo.bar"})
@@ -60,6 +69,14 @@ defmodule WebhooksEmitterTest do
 
     test "with a not started emitter ID" do
       refute WebhooksEmitter.started?(:not_existent_id)
+    end
+
+    test "with a stopped emitter" do
+      WebhooksEmitter.attach(:will_terminate, "an_event", %Config{url: "http://foo.bar"})
+      assert WebhooksEmitter.started?(:will_terminate)
+
+      :ok = WebhooksEmitter.pause(:will_terminate)
+      refute WebhooksEmitter.started?(:will_terminate)
     end
   end
 

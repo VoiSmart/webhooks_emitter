@@ -20,7 +20,7 @@ defmodule WebhooksEmitter do
   """
   @impl true
   @spec attach(Interface.emitter_id(), Interface.event_name(), Interface.emitter_config()) ::
-          :ok | {:error, :already_exists}
+          :ok | {:error, :already_exists | :already_present}
   def attach(emitter_id, event_name, %Config{} = config)
       when is_binary(event_name) or is_atom(event_name) do
     attach_many(emitter_id, [event_name], config)
@@ -36,18 +36,18 @@ defmodule WebhooksEmitter do
           Interface.emitter_id(),
           Interface.event_names(),
           Interface.emitter_config()
-        ) ::
-          :ok | {:error, :already_exists}
+        ) :: :ok | {:error, :already_exists | :already_present}
   def attach_many(emitter_id, event_names, %Config{} = config)
       when is_list(event_names) do
     case Emitter.start_emitter(emitter_id, event_names, config) do
       {:ok, _pid} -> :ok
       {:error, {:already_started, _pid}} -> {:error, :already_exists}
+      {:error, :already_present} = err -> err
     end
   end
 
   @doc """
-  Returns all emitters ID attached to events.
+  Returns all running emitter IDs attached to events.
   """
   @impl true
   @spec list_emitters() ::
@@ -73,8 +73,34 @@ defmodule WebhooksEmitter do
   @impl true
   @spec detach(Interface.emitter_id()) :: :ok
   def detach(emitter_id) do
+    Emitter.terminate_emitter(emitter_id)
+    :ok
+  end
+
+  @doc """
+  Pauses an emitter.
+
+  Stops the process without removing from the supervision tree.
+  Any queued message will be lost.
+  """
+  @impl true
+  @spec pause(Interface.emitter_id()) :: :ok
+  def pause(emitter_id) do
     Emitter.stop_emitter(emitter_id)
     :ok
+  end
+
+  @doc """
+  Restart an already present, but paused emitter
+  """
+  @impl true
+  @spec restart(Interface.emitter_id()) :: :ok | {:error, term()}
+  def restart(emitter_id) do
+    case Emitter.restart_emitter(emitter_id) do
+      {:ok, _} -> :ok
+      {:ok, _, _} -> :ok
+      {:error, _reason} = err -> err
+    end
   end
 
   @doc """
