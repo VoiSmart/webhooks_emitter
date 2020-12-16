@@ -22,6 +22,11 @@ defmodule WebhooksEmitter.Emitter do
     Supervisor.delete_child(EmitterSup, emitter_spec_id(emitter_id))
   end
 
+  def get_emitters do
+    Supervisor.which_children(EmitterSup)
+    |> Enum.map(fn {{_, emitter_id}, _, _, _} -> emitter_id end)
+  end
+
   def emit(event_name, payload, request_id) do
     registry_name()
     |> Registry.dispatch(
