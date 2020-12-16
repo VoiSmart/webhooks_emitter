@@ -21,8 +21,6 @@ def deps do
 end
 ```
 
-Because of `:crypto.mac` function usage, at least OTP 22.1 is needed.
-
 ## Usage
 
 To start, a new configuration must be built using `WebhooksEmitter.Config.new/1`:
